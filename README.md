@@ -24,8 +24,10 @@ val spark = SparkSession.builder().getOrCreate()
 
 ***Import dataset and print schema***
 
-```val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")
-data.printSchema()```  
+```
+val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")
+data.printSchema()
+```  
 
 >|-- _c0: integer (nullable = true)<br />
 >|-- carat: double (nullable = true)<br />
