@@ -28,7 +28,6 @@ val spark = SparkSession.builder().getOrCreate()
 data.printSchema()`
 
 |-- _c0: integer (nullable = true)
-
 |-- carat: double (nullable = true)
 
 |-- cut: string (nullable = true)
