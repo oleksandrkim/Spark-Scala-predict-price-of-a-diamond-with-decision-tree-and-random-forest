@@ -139,16 +139,21 @@ println("Root Mean Squared Error (RMSE) on test data = " + rmse)
 // Select (prediction, true label) and compute test error.
 val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("r2")
 val r2 = evaluator_r2.evaluate(predictions)
-println("Root Mean Squared Error (r^2) on test data = " + r2)
+println("R-squared (r^2) on test data = " + r2)
 
 // Select (prediction, true label) and compute test error.
 val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mae")
 val mae = evaluator_mae.evaluate(predictions)
-println("Root Mean Squared Error (MAE) on test data = " + mae)
+println("Mean Absolute Error (MAE) on test data = " + mae)
 
 // Select (prediction, true label) and compute test error.
 val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mse")
 val mse = evaluator_mse.evaluate(predictions)
-println("Root Mean Squared Error (MSE) on test data = " + mse)
+println("Mean Squared Error (MSE) on test data = " + mse)
 predictions.select("features", "label", "prediction").show()
 ```
+
+>Root Mean Squared Error (RMSE) on test data = 839.790709763866 <br />
+>R-squared (r^2) on test data = 0.9556915131409848 <br />
+>Mean Absolute Error (MAE) on test data = 381.5670094175047 <br />
+>Mean Squared Error (MSE) on test data  = 705248.4362056978 <br />
