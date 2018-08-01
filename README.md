@@ -6,7 +6,7 @@ Usage of Spark machine learning (Linear Regression, Decision tree, Random forest
 - Number of features: 11
 - Source of data: https://www.kaggle.com/shivam2503/diamonds
 
-**Import and start of spark session**
+**Import libraries and start of spark session**
 ```
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.regression.LinearRegression
