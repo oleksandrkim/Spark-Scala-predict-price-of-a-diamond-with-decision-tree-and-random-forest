@@ -59,10 +59,60 @@ data.printSchema()
 ```
 //drop column with ids
 val df_noid = data.drop(data.col("_c0"))
-//df_noid.printSchema()
 
 val df_no_na = df_noid.na.drop()
 
 val df_label = df_no_na.select(data("price").as("label"), $"carat", $"cut", $"color", $"clarity", $"depth", $"table", $"x", $"y", $"z")
 ```
+
+**Encode categorical variables: convert strings to integers and encode with OneHotEncoderEstimator**
+
+```
+// Import VectorAssembler and Vectors
+import org.apache.spark.ml.feature.{VectorAssembler,StringIndexer,VectorIndexer,OneHotEncoder}
+import org.apache.spark.ml.linalg.Vectors
+
+val cutIndexer = new StringIndexer().setInputCol("cut").setOutputCol("cutIndex")
+val colorIndexer = new StringIndexer().setInputCol("color").setOutputCol("colorIndex")
+val clarityIndexer = new StringIndexer().setInputCol("clarity").setOutputCol("clarityIndex")
+
+import org.apache.spark.ml.feature.OneHotEncoderEstimator
+val encoder = new OneHotEncoderEstimator().setInputCols(Array("cutIndex", "colorIndex", "clarityIndex")).setOutputCols(Array("cutIndexEnc", "colorIndexEnc", "clarityIndexEnc"))
+```
+
+**Vector assembler**
+
+```
+val assembler = (new VectorAssembler()
+                    .setInputCols(Array("carat", "cutIndexEnc", "colorIndexEnc", "clarityIndexEnc", "depth", "table", "x", "y", "z"))
+                    .setOutputCol("features_assem") )
+```
+
+**Scalling of features with MinMaxScaler**
+
+```
+import org.apache.spark.ml.feature.MinMaxScaler
+val scaler = new MinMaxScaler().setInputCol("features_assem").setOutputCol("features")
+```
+
+**Train/Test split**
+
+```val Array(training, test) = df_label.randomSplit(Array(0.75, 0.25))```
+
+**Building decision tree, contructing a pipeline and creating a ParamGrid**
+
+```
+import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.regression.DecisionTreeRegressionModel
+import org.apache.spark.ml.regression.DecisionTreeRegressor
+
+import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
+//Dataframe
+val dt = new DecisionTreeRegressor().setLabelCol("label").setFeaturesCol("features")//.setImpurity("variance")
+
+val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,encoder, assembler,scaler, dt))
+
+val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20, 30)).addGrid(dt.maxBins, Array(10, 20, 30, 50)).build()
+```
+
 
