@@ -157,7 +157,7 @@ predictions.select("features", "label", "prediction").show()
 >Mean Absolute Error (MAE) on test data = 381.5670094175047 <br />
 >Mean Squared Error (MSE) on test data  = 705248.4362056978 <br />
 
-### Predictions
+### Predictions of decision tree model
 
 >+-----+------------------+<br />
 >|label|        prediction|<br />
