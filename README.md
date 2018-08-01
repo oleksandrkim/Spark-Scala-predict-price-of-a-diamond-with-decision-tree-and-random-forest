@@ -125,7 +125,6 @@ val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new Regression
 val cvModel = cv.fit(training)
 
 val predictions = cvModel.transform(test)
-
 ```
 
 **Evaluate a model**
