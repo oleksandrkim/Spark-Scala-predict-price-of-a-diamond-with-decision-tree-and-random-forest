@@ -236,3 +236,34 @@ val mse = evaluator_mse.evaluate(predictions)
 println("Mean Squared Error (MSE) on test data = " + mse)
 predictions.select("features", "label", "prediction").show()
 ```
+
+
+>Root Mean Squared Error (RMSE) on test data = 570.8512705968417<br />
+>Root Mean Squared Error (r^2) on test data = 0.9792948676072686<br />
+>Root Mean Squared Error (MAE) on test data = 257.77994671313667<br />
+>Root Mean Squared Error (MSE) on test data = 325871.1731420286<br />
+
+>+------------------+-----+<br />
+>|        prediction|label|<br /><br />
+>+------------------+-----+<br />
+>|            445.74|  334|<br />
+>| 445.66|  340|<br />
+>|             351.0|  351|<br />
+>|             352.0|  352|<br />
+>|             410.0|  353|<br />
+>|             355.0|  355|<br />
+>|            445.74|  357|<br />
+>|  574.17|  357|<br />
+>|             362.0|  362|<br />
+>|             385.0|  363|<br />
+>|435.57|  363|<br />
+>|             385.0|  364|<br />
+>|            445.74|  367|<br />
+>|            445.74|  367|<br />
+>|             377.5|  367|<br />
+>|             410.0|  367|<br />
+>|384.853|  368|<br />
+>|             416.0|  368|<br />
+>|             371.5|  371|<br />
+>|             373.0|  373|<br />
+>+------------------+-----+<br />
