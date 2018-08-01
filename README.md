@@ -23,6 +23,7 @@ val spark = SparkSession.builder().getOrCreate()
 ```
 
 ***Import dataset***
+
 `val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")`
 
 ```|-- _c0: integer (nullable = true)
