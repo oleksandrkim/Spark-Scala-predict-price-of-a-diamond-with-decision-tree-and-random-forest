@@ -27,15 +27,15 @@ val spark = SparkSession.builder().getOrCreate()
 `val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")
 data.printSchema()`
 
->|-- _c0: integer (nullable = true)
->|-- carat: double (nullable = true)
->|-- cut: string (nullable = true)
->|-- color: string (nullable = true)
->|-- clarity: string (nullable = true)
->|-- depth: double (nullable = true)
->|-- table: double (nullable = true)
->|-- price: integer (nullable = true)
->|-- x: double (nullable = true)
->|-- y: double (nullable = true)
->|-- z: double (nullable = true)
+>|-- _c0: integer (nullable = true)<br />
+>|-- carat: double (nullable = true)<br />
+>|-- cut: string (nullable = true)<br />
+>|-- color: string (nullable = true)<br />
+>|-- clarity: string (nullable = true)<br />
+>|-- depth: double (nullable = true)<br />
+>|-- table: double (nullable = true)<br />
+>|-- price: integer (nullable = true)<br />
+>|-- x: double (nullable = true)<br />
+>|-- y: double (nullable = true)<br />
+>|-- z: double (nullable = true)<br />
 
