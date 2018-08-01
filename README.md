@@ -99,6 +99,8 @@ val scaler = new MinMaxScaler().setInputCol("features_assem").setOutputCol("feat
 
 ```val Array(training, test) = df_label.randomSplit(Array(0.75, 0.25))```
 
+###Decision Tree
+
 **Building decision tree, contructing a pipeline and creating a ParamGrid**
 
 ```
@@ -115,4 +117,38 @@ val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIn
 val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20, 30)).addGrid(dt.maxBins, Array(10, 20, 30, 50)).build()
 ```
 
+**Cross-validation (3 splits); Predict test data**
 
+```
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator).setEstimatorParamMaps(paramGrid).setNumFolds(3)
+
+val cvModel = cv.fit(training)
+
+val predictions = cvModel.transform(test)
+
+```
+
+**Evaluate a model**
+
+```
+// Select (prediction, true label) and compute test error.
+val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("rmse")
+val rmse = evaluator.evaluate(predictions)
+println("Root Mean Squared Error (RMSE) on test data = " + rmse)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("r2")
+val r2 = evaluator_r2.evaluate(predictions)
+println("Root Mean Squared Error (r^2) on test data = " + r2)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mae")
+val mae = evaluator_mae.evaluate(predictions)
+println("Root Mean Squared Error (MAE) on test data = " + mae)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mse")
+val mse = evaluator_mse.evaluate(predictions)
+println("Root Mean Squared Error (MSE) on test data = " + mse)
+predictions.select("features", "label", "prediction").show()
+```
