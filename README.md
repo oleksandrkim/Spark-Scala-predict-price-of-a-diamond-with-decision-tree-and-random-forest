@@ -159,9 +159,9 @@ predictions.select("features", "label", "prediction").show()
 
 ### Predictions
 
-+-----+------------------+<br />
-|label|        prediction|<br />
-+-----+------------------+<br />
+>+-----+------------------+<br />
+>|label|        prediction|<br />
+>+-----+------------------+<br />
 >|  326|             724.0|<br />
 >|  334|            445.74|<br />
 >|  337|             362.0|<br />
