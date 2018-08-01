@@ -99,7 +99,7 @@ val scaler = new MinMaxScaler().setInputCol("features_assem").setOutputCol("feat
 
 ```val Array(training, test) = df_label.randomSplit(Array(0.75, 0.25))```
 
-###Decision Tree
+## Decision Tree
 
 **Building decision tree, contructing a pipeline and creating a ParamGrid**
 
