@@ -25,7 +25,7 @@ val spark = SparkSession.builder().getOrCreate()
 ***Import dataset***
 `val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")`
 
-|-- _c0: integer (nullable = true)
+```|-- _c0: integer (nullable = true)
 |-- carat: double (nullable = true)
 |-- cut: string (nullable = true)
 |-- color: string (nullable = true)
@@ -35,4 +35,4 @@ val spark = SparkSession.builder().getOrCreate()
 |-- price: integer (nullable = true)
 |-- x: double (nullable = true)
 |-- y: double (nullable = true)
-|-- z: double (nullable = true)
+|-- z: double (nullable = true)```
