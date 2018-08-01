@@ -41,6 +41,8 @@ data.printSchema()
 >|-- y: double (nullable = true)<br />
 >|-- z: double (nullable = true)<br />
 
+**Subset of data**
+
 `data.show`
 
 >+---+-----+---------+-----+-------+-----+-----+-----+----+----+----+<br />
@@ -51,3 +53,16 @@ data.printSchema()
 >|  3| 0.23|     Good|    E|    VS1| 56.9| 65.0|  327|4.05|4.07|2.31|<br />
 >|  4| 0.29|  Premium|    I|    VS2| 62.4| 58.0|  334| 4.2|4.23|2.63|<br />
 >|  5| 0.31|     Good|    J|    SI2| 63.3| 58.0|  335|4.34|4.35|2.75|<br />
+
+**Some data preprocessing**
+
+```
+//drop column with ids
+val df_noid = data.drop(data.col("_c0"))
+//df_noid.printSchema()
+
+val df_no_na = df_noid.na.drop()
+
+val df_label = df_no_na.select(data("price").as("label"), $"carat", $"cut", $"color", $"clarity", $"depth", $"table", $"x", $"y", $"z")
+```
+
