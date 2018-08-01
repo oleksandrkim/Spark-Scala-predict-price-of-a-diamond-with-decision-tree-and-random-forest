@@ -237,14 +237,15 @@ println("Mean Squared Error (MSE) on test data = " + mse)
 predictions.select("features", "label", "prediction").show()
 ```
 
-
 >Root Mean Squared Error (RMSE) on test data = 570.8512705968417<br />
 >Root Mean Squared Error (r^2) on test data = 0.9792948676072686<br />
 >Root Mean Squared Error (MAE) on test data = 257.77994671313667<br />
 >Root Mean Squared Error (MSE) on test data = 325871.1731420286<br />
 
+### Predictions of random forest model
+
 >+------------------+-----+<br />
->|        prediction|label|<br /><br />
+>|        prediction|label|<br />
 >+------------------+-----+<br />
 >|            445.74|  334|<br />
 >| 445.66|  340|<br />
