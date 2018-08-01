@@ -101,7 +101,9 @@ val scaler = new MinMaxScaler().setInputCol("features_assem").setOutputCol("feat
 
 ## Decision Tree
 
-**Building decision tree, contructing a pipeline and creating a ParamGrid**
+**Building a decision tree, contructing a pipeline and creating a ParamGrid**
+
+Parameters: Max depth(5, 10, 15, 20, 30) and Max Bins(10, 20, 30, 50)
 
 ```
 import org.apache.spark.ml.Pipeline
@@ -109,7 +111,7 @@ import org.apache.spark.ml.regression.DecisionTreeRegressionModel
 import org.apache.spark.ml.regression.DecisionTreeRegressor
 
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
-//Dataframe
+
 val dt = new DecisionTreeRegressor().setLabelCol("label").setFeaturesCol("features")//.setImpurity("variance")
 
 val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,encoder, assembler,scaler, dt))
@@ -121,9 +123,7 @@ val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20,
 
 ```
 val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator).setEstimatorParamMaps(paramGrid).setNumFolds(3)
-
 val cvModel = cv.fit(training)
-
 val predictions = cvModel.transform(test)
 ```
 
@@ -159,27 +159,80 @@ predictions.select("features", "label", "prediction").show()
 
 ### Predictions
 
->+--------------------+-----+------------------+<br />
->|            features|label|        prediction|<br />
->+--------------------+-----+------------------+<br />
->|[0.00623700623700...|  326|             394.0|<br />
->|[0.00623700623700...|  327|             403.0|<br />
->|[0.01247401247401...|  337|             370.5|<br />
->|[0.00623700623700...|  338|             388.0|<br />
->|[0.02286902286902...|  344|435.57142857142856|<br />
->|[0.02079002079002...|  351|             386.0|<br />
->|[0.02079002079002...|  351| 607.2142857142857|<br />
->|[0.00831600831600...|  355|448.88461538461536|<br />
->|[0.00623700623700...|  357|             401.5|<br />
->|[0.00623700623700...|  357|             461.0|<br />
->|[0.02079002079002...|  357| 588.6987577639752|<br />
->|[0.01247401247401...|  358|448.88461538461536|<br />
->|[0.01663201663201...|  360|             429.0|<br />
->|[0.01039501039501...|  361|             435.0|<br />
->|[0.00623700623700...|  362|429.14285714285717|<br />
->|[0.02286902286902...|  363|477.41121495327104|<br />
->|[0.02494802494802...|  365|424.47222222222223|<br />
->|[0.0,0.0,1.0,0.0,...|  367|             367.0|<br />
->|[0.02079002079002...|  367|477.41121495327104|<br />
->|[0.02079002079002...|  368| 588.6987577639752|<br />
->+--------------------+-----+------------------+<br />
++-----+------------------+<br />
+|label|        prediction|<br />
++-----+------------------+<br />
+>|  326|             724.0|<br />
+>|  334|            445.74|<br />
+>|  337|             362.0|<br />
+>|  337|             360.0|<br />
+>|  340| 445|<br />
+>|  344|448|<br />
+>|  357|            445.74|<br />
+>|  357|            445.74|<br />
+>|  357|388.27|<br />
+>|  360|             371.5|<br />
+>|  361| 564.26|<br />
+>|  362|            445.74|<br />
+>|  363|             385.0|<br />
+>|  363|435.57|<br />
+>|  365| 533.22|<br />
+>|  367|             625.0|<br />
+>|  367|            445.74|<br />
+>|  367|            445.74|<br />
+>|  367|            445.74|<br />
+>|  367|            445.74|<br />
+>+-----+------------------+<br />
+
+
+
+## Random Forest
+
+**Building a random forest, contructing a pipeline and creating a ParamGrid**
+
+Parameters to tune: Max Depth (5, 10, 15, 20, 30, 50), Max Bins (10, 20, 30, 50), Number of trees (10, 20).
+
+```
+import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.regression.{RandomForestRegressionModel, RandomForestRegressor}
+import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
+
+val rf = new RandomForestRegressor().setLabelCol("label").setFeaturesCol("features")//.setImpurity("variance")
+
+val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,encoder, assembler,scaler, rf))
+
+val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(5, 10, 15, 20, 30, 50)).addGrid(rf.maxBins, Array(10, 20, 30, 50)).addGrid(rf.numTrees, Array(10, 20)).build()
+```
+
+**Cross-validation (3 splits); Predict test data**
+
+```
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator).setEstimatorParamMaps(paramGrid).setNumFolds(3)
+val cvModel = cv.fit(training)
+val predictions = cvModel.transform(test)
+```
+
+**Evaluate a model**
+
+```
+// Select (prediction, true label) and compute test error.
+val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("rmse")
+val rmse = evaluator.evaluate(predictions)
+println("Root Mean Squared Error (RMSE) on test data = " + rmse)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("r2")
+val r2 = evaluator_r2.evaluate(predictions)
+println("R-squared (r^2) on test data = " + r2)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mae")
+val mae = evaluator_mae.evaluate(predictions)
+println("Mean Absolute Error (MAE) on test data = " + mae)
+
+// Select (prediction, true label) and compute test error.
+val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mse")
+val mse = evaluator_mse.evaluate(predictions)
+println("Mean Squared Error (MSE) on test data = " + mse)
+predictions.select("features", "label", "prediction").show()
+```
