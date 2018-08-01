@@ -20,5 +20,19 @@ Logger.getLogger("org").setLevel(Level.ERROR) //less warnings pop up
 // Start a simple Spark Session
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
-
 ```
+
+***Import dataset***
+`val data = spark.read.option("header","true").option("inferSchema","true").format("csv").load("diamonds.csv")`
+
+ |-- _c0: integer (nullable = true)
+ |-- carat: double (nullable = true)
+ |-- cut: string (nullable = true)
+ |-- color: string (nullable = true)
+ |-- clarity: string (nullable = true)
+ |-- depth: double (nullable = true)
+ |-- table: double (nullable = true)
+ |-- price: integer (nullable = true)
+ |-- x: double (nullable = true)
+ |-- y: double (nullable = true)
+ |-- z: double (nullable = true)
