@@ -7,7 +7,7 @@ Usage of Spark machine learning (Linear Regression, Decision tree, Random forest
 - Source of data: https://www.kaggle.com/shivam2503/diamonds
 
 **Import and start of spark session**
-"""
+```
 import org.apache.spark.ml.evaluation.RegressionEvaluator
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
@@ -21,4 +21,4 @@ Logger.getLogger("org").setLevel(Level.ERROR) //less warnings pop up
 import org.apache.spark.sql.SparkSession
 val spark = SparkSession.builder().getOrCreate()
 
-"""
+```
