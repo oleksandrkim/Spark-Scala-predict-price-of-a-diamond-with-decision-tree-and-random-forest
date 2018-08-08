@@ -1,4 +1,4 @@
-# Spark-Scala-predict-price-of-a-diamond-with-decision-tree-and-random-forest
+# Spark/Scala predict price of a diamond with decision tree and random forest
 Usage of Spark machine learning (Linear Regression, Decision tree, Random forest) to create a model that predicts a price of diamonds on a basis of different features of them. GridSearch is applied to find the best combination of parameters of a model
 
 **Information about the dataset**
@@ -62,7 +62,8 @@ val df_noid = data.drop(data.col("_c0"))
 
 val df_no_na = df_noid.na.drop()
 
-val df_label = df_no_na.select(data("price").as("label"), $"carat", $"cut", $"color", $"clarity", $"depth", $"table", $"x", $"y", $"z")
+val df_label = df_no_na.select(data("price").as("label"), $"carat", $"cut", $"color", $"clarity", 
+  $"depth", $"table", $"x", $"y", $"z")
 ```
 
 **Encode categorical variables: convert strings to integers and encode with OneHotEncoderEstimator**
@@ -84,7 +85,8 @@ val encoder = new OneHotEncoderEstimator().setInputCols(Array("cutIndex", "color
 
 ```
 val assembler = (new VectorAssembler()
-                    .setInputCols(Array("carat", "cutIndexEnc", "colorIndexEnc", "clarityIndexEnc", "depth", "table", "x", "y", "z"))
+                    .setInputCols(Array("carat", "cutIndexEnc", "colorIndexEnc", "clarityIndexEnc", 
+                    "depth", "table", "x", "y", "z"))
                     .setOutputCol("features_assem") )
 ```
 
@@ -112,11 +114,13 @@ import org.apache.spark.ml.regression.DecisionTreeRegressor
 
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
 
-val dt = new DecisionTreeRegressor().setLabelCol("label").setFeaturesCol("features")//.setImpurity("variance")
+val dt = new DecisionTreeRegressor().setLabelCol("label").setFeaturesCol("features")
 
-val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,encoder, assembler,scaler, dt))
+val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, 
+  clarityIndexer,encoder, assembler,scaler, dt))
 
-val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20, 30)).addGrid(dt.maxBins, Array(10, 20, 30, 50)).build()
+val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20, 30))
+  .addGrid(dt.maxBins, Array(10, 20, 30, 50)).build()
 ```
 
 **Cross-validation (3 splits); Predict test data**
@@ -131,22 +135,26 @@ val predictions = cvModel.transform(test)
 
 ```
 // Select (prediction, true label) and compute test error.
-val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("rmse")
+val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("rmse")
 val rmse = evaluator.evaluate(predictions)
 println("Root Mean Squared Error (RMSE) on test data = " + rmse)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("r2")
+val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("r2")
 val r2 = evaluator_r2.evaluate(predictions)
 println("R-squared (r^2) on test data = " + r2)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mae")
+val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("mae")
 val mae = evaluator_mae.evaluate(predictions)
 println("Mean Absolute Error (MAE) on test data = " + mae)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mse")
+val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("mse")
 val mse = evaluator_mse.evaluate(predictions)
 println("Mean Squared Error (MSE) on test data = " + mse)
 predictions.select("features", "label", "prediction").show()
@@ -197,11 +205,13 @@ import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.regression.{RandomForestRegressionModel, RandomForestRegressor}
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
 
-val rf = new RandomForestRegressor().setLabelCol("label").setFeaturesCol("features")//.setImpurity("variance")
+val rf = new RandomForestRegressor().setLabelCol("label").setFeaturesCol("features")
 
-val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,encoder, assembler,scaler, rf))
+val pipeline = new Pipeline().setStages(Array(cutIndexer,colorIndexer, clarityIndexer,
+  encoder, assembler,scaler, rf))
 
-val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(5, 10, 15, 20, 30, 50)).addGrid(rf.maxBins, Array(10, 20, 30, 50)).addGrid(rf.numTrees, Array(10, 20)).build()
+val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(5, 10, 15, 20, 30, 50))
+  .addGrid(rf.maxBins, Array(10, 20, 30, 50)).addGrid(rf.numTrees, Array(10, 20)).build()
 ```
 
 **Cross-validation (3 splits); Predict test data**
@@ -216,22 +226,26 @@ val predictions = cvModel.transform(test)
 
 ```
 // Select (prediction, true label) and compute test error.
-val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("rmse")
+val evaluator = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("rmse")
 val rmse = evaluator.evaluate(predictions)
 println("Root Mean Squared Error (RMSE) on test data = " + rmse)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("r2")
+val evaluator_r2 = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("r2")
 val r2 = evaluator_r2.evaluate(predictions)
 println("R-squared (r^2) on test data = " + r2)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mae")
+val evaluator_mae = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("mae")
 val mae = evaluator_mae.evaluate(predictions)
 println("Mean Absolute Error (MAE) on test data = " + mae)
 
 // Select (prediction, true label) and compute test error.
-val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction").setMetricName("mse")
+val evaluator_mse = new RegressionEvaluator().setLabelCol("label").setPredictionCol("prediction")
+  .setMetricName("mse")
 val mse = evaluator_mse.evaluate(predictions)
 println("Mean Squared Error (MSE) on test data = " + mse)
 predictions.select("features", "label", "prediction").show()
