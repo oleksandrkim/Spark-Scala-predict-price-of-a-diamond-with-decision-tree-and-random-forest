@@ -78,7 +78,8 @@ val colorIndexer = new StringIndexer().setInputCol("color").setOutputCol("colorI
 val clarityIndexer = new StringIndexer().setInputCol("clarity").setOutputCol("clarityIndex")
 
 import org.apache.spark.ml.feature.OneHotEncoderEstimator
-val encoder = new OneHotEncoderEstimator().setInputCols(Array("cutIndex", "colorIndex", "clarityIndex")).setOutputCols(Array("cutIndexEnc", "colorIndexEnc", "clarityIndexEnc"))
+val encoder = new OneHotEncoderEstimator().setInputCols(Array("cutIndex", "colorIndex", "clarityIndex"))
+  .setOutputCols(Array("cutIndexEnc", "colorIndexEnc", "clarityIndexEnc"))
 ```
 
 **Vector assembler**
@@ -126,7 +127,8 @@ val paramGrid = new ParamGridBuilder().addGrid(dt.maxDepth, Array(5, 10, 15, 20,
 **Cross-validation (3 splits); Predict test data**
 
 ```
-val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator).setEstimatorParamMaps(paramGrid).setNumFolds(3)
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator)
+  .setEstimatorParamMaps(paramGrid).setNumFolds(3)
 val cvModel = cv.fit(training)
 val predictions = cvModel.transform(test)
 ```
@@ -217,7 +219,8 @@ val paramGrid = new ParamGridBuilder().addGrid(rf.maxDepth, Array(5, 10, 15, 20,
 **Cross-validation (3 splits); Predict test data**
 
 ```
-val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator).setEstimatorParamMaps(paramGrid).setNumFolds(3)
+val cv = new CrossValidator().setEstimator(pipeline).setEvaluator(new RegressionEvaluator)
+  .setEstimatorParamMaps(paramGrid).setNumFolds(3)
 val cvModel = cv.fit(training)
 val predictions = cvModel.transform(test)
 ```
